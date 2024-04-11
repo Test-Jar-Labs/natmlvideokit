@@ -19,6 +19,7 @@ namespace VideoKit.Assets {
     using NJsonSchema;
     using NJsonSchema.Generation;
     using Internal;
+    using Utilities;
 
     /// <summary>
     /// Text asset.
@@ -49,12 +50,14 @@ namespace VideoKit.Assets {
             var prediction = await VideoKitSettings.Instance.fxn.Predictions.Create(
                 "@videokit/un2structured-v0-1",
                 inputs: new () { [@"text"] = text, [@"schema"] = schema.ToJson() }
-            ) as CloudPrediction;
+            );
             // Check
-            if (!string.IsNullOrEmpty(prediction.error))
-                throw new InvalidOperationException(prediction.error);
+            var predictionError = PredictionUtility.GetError(prediction);
+            if (!string.IsNullOrEmpty(predictionError))
+                throw new InvalidOperationException(predictionError);
             // Parse
-            var resultStr = prediction.results[0] as string;
+            var predictionResults = PredictionUtility.GetResults(prediction);
+            var resultStr = predictionResults[0] as string;
             var result = JsonConvert.DeserializeObject<T>(resultStr);
             // Return
             return result;

@@ -12,6 +12,7 @@ namespace VideoKit.Assets {
     using System.Threading.Tasks;
     using Function.Types;
     using Internal;
+    using Utilities;
 
     /// <summary>
     /// Audio asset.
@@ -44,12 +45,14 @@ namespace VideoKit.Assets {
             var prediction = await VideoKitSettings.Instance.fxn.Predictions.Create(
                 "@videokit/caption-v0-1",
                 inputs: new () { [@"audio"] = stream }
-            ) as CloudPrediction;
+            );
             // Check
-            if (!string.IsNullOrEmpty(prediction.error))
-                throw new InvalidOperationException(prediction.error);
+            var predictionError = PredictionUtility.GetError(prediction);
+            if (!string.IsNullOrEmpty(predictionError))
+                throw new InvalidOperationException(predictionError);
             // Return
-            var result = prediction.results[0] as string;
+            var predictionResults = PredictionUtility.GetResults(prediction);
+            var result = predictionResults[0] as string;
             return result;
         }
 
@@ -65,6 +68,7 @@ namespace VideoKit.Assets {
             );
             return value;
         }
+        
         #endregion
 
 
@@ -76,6 +80,7 @@ namespace VideoKit.Assets {
             this.channelCount = channelCount;
             this.duration = duration;
         }
+        
         #endregion
     }
 }

@@ -3,6 +3,7 @@
     "rootNamespace": "",
     "references": [
         "Function.Runtime",
+        "Function.Unity",
         "NatML.Runtime"
     ],
     "includePlatforms": [
@@ -19,6 +20,17 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "ai.fxn.fxn3d",
+            "expression": "0.0.6",
+            "define": "FXN3D_006_OR_LATER"
+        },
+        {
+            "name": "ai.fxn.fxn3d",
+            "expression": "0",
+            "define": "FXN3D"
+        }
+    ],
     "noEngineReferences": false
 }
